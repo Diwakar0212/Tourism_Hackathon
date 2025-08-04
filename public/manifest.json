@@ -1,0 +1,52 @@
+{
+  "name": "SafeSolo - Travel Safe, Travel Solo",
+  "short_name": "SafeSolo",
+  "description": "Empowering women and differently-abled travelers with AI-powered planning, safety features, and accessible adventures worldwide.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0D9488",
+  "background_color": "#F0FDFA",
+  "orientation": "portrait-primary",
+  "categories": ["travel", "lifestyle", "navigation"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Emergency SOS",
+      "short_name": "SOS",
+      "description": "Quick access to emergency features",
+      "url": "/safety",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Plan Trip",
+      "short_name": "Plan",
+      "description": "AI-powered trip planning",
+      "url": "/plan-trip",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

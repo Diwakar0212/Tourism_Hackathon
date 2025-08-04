@@ -7,11 +7,20 @@ import {
   AlertTriangle,
   Clock,
   CheckCircle,
-  Settings
+  Settings,
+  Bell
 } from 'lucide-react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import SOSButton from '../components/safety/SOSButton';
+import NotificationSettings from '../components/notifications/NotificationSettings';
+import { 
+  useSafetyMonitoring, 
+  triggerEmergencyDemo, 
+  triggerSafetyCheckInDemo, 
+  triggerLocationShareDemo,
+  triggerWeatherAlertDemo
+} from '../components/notifications/NotificationDemoHooks';
 
 const SafetyPage: React.FC = () => {
   const [emergencyContacts, setEmergencyContacts] = useState([
@@ -25,10 +34,28 @@ const SafetyPage: React.FC = () => {
     { id: '3', time: '10:00 PM', status: 'pending', location: 'Hotel Taj Palace' },
   ]);
 
+  const [showNotificationSettings, setShowNotificationSettings] = useState(false);
+
+  // Initialize safety monitoring
+  useSafetyMonitoring();
+
   const handleEmergencyTrigger = (type: string, location?: GeolocationPosition) => {
     console.log('Emergency triggered:', type, location);
-    // In a real app, this would send SOS alerts, contact emergency services, etc.
+    // Trigger demo emergency notification
+    triggerEmergencyDemo();
     alert(`SOS Alert Sent! Type: ${type}. Emergency contacts will be notified immediately.`);
+  };
+
+  const handleSafetyCheckIn = () => {
+    triggerSafetyCheckInDemo();
+  };
+
+  const handleLocationShare = () => {
+    triggerLocationShareDemo();
+  };
+
+  const handleWeatherAlert = () => {
+    triggerWeatherAlertDemo();
   };
 
   const emergencyServices = [

@@ -16,6 +16,7 @@ import {
   LogOut
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useAIAssistant } from '../../contexts/AIAssistantContext';
 import AuthForm from '../auth/AuthForm';
 import ConnectionStatus from '../common/ConnectionStatus';
 
@@ -28,6 +29,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeRoute, onNavigate }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAuthForm, setShowAuthForm] = useState(false);
   const { user, userProfile, signOut } = useAuth();
+  const { toggleAssistant } = useAIAssistant();
 
   const navItems = [
     { id: 'home', label: 'Home', icon: Home, route: '/' },
@@ -35,7 +37,6 @@ const Navigation: React.FC<NavigationProps> = ({ activeRoute, onNavigate }) => {
     { id: 'search', label: 'Search & Book', icon: Search, route: '/search', requireAuth: true },
     { id: 'trips', label: 'My Trips', icon: Calendar, route: '/trips', requireAuth: true },
     { id: 'safety', label: 'Safety', icon: Shield, route: '/safety' },
-    { id: 'ai', label: 'AI Assistant', icon: Bot, route: '/ai' },
     { id: 'profile', label: 'Profile', icon: User, route: '/profile', requireAuth: true },
   ];
 
@@ -96,6 +97,16 @@ const Navigation: React.FC<NavigationProps> = ({ activeRoute, onNavigate }) => {
             {/* Right Actions */}
             <div className="flex items-center space-x-4">
               <ConnectionStatus />
+              
+              {/* AI Assistant Toggle */}
+              <button 
+                onClick={toggleAssistant}
+                className="p-2 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-md transition-colors"
+                title="AI Assistant"
+              >
+                <Bot className="h-5 w-5" />
+              </button>
+              
               <button className="p-2 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-md transition-colors">
                 <MessageCircle className="h-5 w-5" />
               </button>
@@ -159,6 +170,16 @@ const Navigation: React.FC<NavigationProps> = ({ activeRoute, onNavigate }) => {
             </div>
             <div className="flex items-center space-x-2">
               <ConnectionStatus className="hidden sm:block" />
+              
+              {/* AI Assistant Toggle for Mobile */}
+              <button 
+                onClick={toggleAssistant}
+                className="p-2 text-gray-600 hover:text-teal-600 rounded-md"
+                title="AI Assistant"
+              >
+                <Bot className="h-5 w-5" />
+              </button>
+              
               <button className="p-2 text-gray-600 hover:text-teal-600 rounded-md">
                 <Bell className="h-5 w-5" />
               </button>

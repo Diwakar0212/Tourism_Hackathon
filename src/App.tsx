@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { SafetyProvider } from './contexts/SafetyContext';
+import { AIAssistantProvider } from './contexts/AIAssistantContext';
 import Navigation from './components/layout/Navigation';
 import NotificationSystem from './components/notifications/NotificationSystem';
 import PWAInstallPrompt from './components/common/PWAInstallPrompt';
 import DevelopmentNotice from './components/common/DevelopmentNotice';
+import DynamicBackground from './components/common/DynamicBackground';
+import GlobalAIAssistant from './components/ai/GlobalAIAssistant';
 import HomePage from './pages/HomePage';
 import SafetyPage from './pages/SafetyPage';
 import ExplorePage from './pages/ExplorePage';
@@ -21,6 +24,25 @@ function App() {
 
   const handleNavigation = (route: string) => {
     setActiveRoute(route);
+  };
+
+  // Different background variants for different pages
+  const getBackgroundVariant = (route: string) => {
+    switch (route) {
+      case '/':
+        return 'mesh'; // Homepage gets the mesh gradient
+      case '/explore':
+        return 'geometric'; // Explore page gets geometric patterns
+      case '/safety':
+        return 'waves'; // Safety page gets calming waves
+      case '/search':
+      case '/trips':
+        return 'particles'; // Interactive pages get particles
+      case '/ai':
+        return 'gradient'; // AI page gets animated gradient
+      default:
+        return 'mesh';
+    }
   };
 
   const renderCurrentPage = () => {
@@ -53,15 +75,25 @@ function App() {
   return (
     <AuthProvider>
       <SafetyProvider>
-        <div className="min-h-screen bg-gray-50">
-          <Navigation activeRoute={activeRoute} onNavigate={handleNavigation} />
-          <main className="pt-14 md:pt-16">
-            {renderCurrentPage()}
-          </main>
-          <NotificationSystem />
-          <PWAInstallPrompt />
-          <DevelopmentNotice />
-        </div>
+        <AIAssistantProvider>
+          <div className="min-h-screen relative">
+            <DynamicBackground 
+              variant={getBackgroundVariant(activeRoute)}
+              opacity={0.8}
+            />
+            <div className="relative z-10">
+              <Navigation activeRoute={activeRoute} onNavigate={handleNavigation} />
+              <main className="pt-14 md:pt-16">
+                {renderCurrentPage()}
+              </main>
+              <NotificationSystem />
+              <PWAInstallPrompt />
+              <DevelopmentNotice />
+              {/* <FloatingAIButton /> */}
+              <GlobalAIAssistant />
+            </div>
+          </div>
+        </AIAssistantProvider>
       </SafetyProvider>
     </AuthProvider>
   );

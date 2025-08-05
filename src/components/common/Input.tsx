@@ -1,76 +1,174 @@
 import React, { forwardRef } from 'react';
+import { motion } from 'framer-motion';
+import { Eye, EyeOff, AlertCircle, Check } from 'lucide-react';
+import { cn } from '../../utils/styles';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   error?: string;
+  success?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  variant?: 'default' | 'filled' | 'borderless';
+  size?: 'sm' | 'md' | 'lg';
   helperText?: string;
-  icon?: React.ReactNode;
-  iconPosition?: 'left' | 'right';
-  fullWidth?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(({
   label,
   error,
+  success,
+  leftIcon,
+  rightIcon,
+  variant = 'default',
+  size = 'md',
   helperText,
-  icon,
-  iconPosition = 'left',
-  fullWidth = false,
-  className = '',
+  className,
+  type,
   id,
   ...props
 }, ref) => {
-  const inputId = id || Math.random().toString(36).substr(2, 9);
-  const hasError = !!error;
-
-  const baseInputClasses = 'block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 transition-colors';
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [isFocused, setIsFocused] = React.useState(false);
   
-  const stateClasses = hasError
-    ? 'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500'
-    : 'border-gray-300 focus:ring-teal-500 focus:border-teal-500';
-
-  const iconClasses = icon ? (iconPosition === 'left' ? 'pl-10' : 'pr-10') : '';
-  const widthClass = fullWidth ? 'w-full' : '';
+  const isPasswordType = type === 'password';
+  const actualType = isPasswordType && showPassword ? 'text' : type;
   
-  const inputClasses = `${baseInputClasses} ${stateClasses} ${iconClasses} ${className}`;
+  const sizeClasses = {
+    sm: 'h-9 px-3 text-sm',
+    md: 'h-11 px-4 text-base',
+    lg: 'h-12 px-5 text-lg'
+  };
+  
+  const variantClasses = {
+    default: 'bg-white border border-secondary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
+    filled: 'bg-secondary-50 border border-transparent focus:bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20',
+    borderless: 'bg-transparent border-b-2 border-secondary-200 focus:border-primary-500 rounded-none'
+  };
+  
+  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
-    <div className={widthClass}>
+    <div className={cn('space-y-2', className)}>
+      {/* Label */}
       {label && (
-        <label 
-          htmlFor={inputId} 
-          className="block text-sm font-medium text-gray-700 mb-1"
+        <motion.label
+          htmlFor={inputId}
+          className={cn(
+            'block text-sm font-medium transition-colors duration-200',
+            error ? 'text-error-600' : success ? 'text-success-600' : 'text-secondary-700'
+          )}
+          animate={{ color: isFocused ? '#0ea5e9' : undefined }}
         >
           {label}
-        </label>
+        </motion.label>
       )}
+      
+      {/* Input Container */}
       <div className="relative">
-        {icon && iconPosition === 'left' && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span className={`text-sm ${hasError ? 'text-red-400' : 'text-gray-400'}`}>
-              {icon}
-            </span>
+        {/* Left Icon */}
+        {leftIcon && (
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400">
+            {leftIcon}
           </div>
         )}
-        <input
-          ref={ref}
-          id={inputId}
-          className={inputClasses}
-          {...props}
-        />
-        {icon && iconPosition === 'right' && (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <span className={`text-sm ${hasError ? 'text-red-400' : 'text-gray-400'}`}>
-              {icon}
-            </span>
-          </div>
-        )}
+        
+        {/* Input Field */}
+        <motion.div
+          whileFocus={{ scale: 1.01 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        >
+          <input
+            ref={ref}
+            type={actualType}
+            id={inputId}
+            className={cn(
+              // Base styles
+              'w-full rounded-xl font-medium transition-all duration-200 outline-none',
+              'placeholder:text-secondary-400 disabled:opacity-50 disabled:cursor-not-allowed',
+              // Size classes
+              sizeClasses[size],
+              // Variant classes
+              variantClasses[variant],
+              // Icon padding adjustments
+              leftIcon && 'pl-10',
+              (rightIcon || isPasswordType || error || success) && 'pr-10',
+              // State-based styling
+              error && 'border-error-500 focus:border-error-500 focus:ring-error-500/20',
+              success && 'border-success-500 focus:border-success-500 focus:ring-success-500/20'
+            )}
+            onFocus={(e) => {
+              setIsFocused(true);
+              props.onFocus?.(e);
+            }}
+            onBlur={(e) => {
+              setIsFocused(false);
+              props.onBlur?.(e);
+            }}
+            {...props}
+          />
+        </motion.div>
+        
+        {/* Right Icons Container */}
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+          {/* Success Icon */}
+          {success && !error && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="text-success-500"
+            >
+              <Check className="w-4 h-4" />
+            </motion.div>
+          )}
+          
+          {/* Error Icon */}
+          {error && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="text-error-500"
+            >
+              <AlertCircle className="w-4 h-4" />
+            </motion.div>
+          )}
+          
+          {/* Password Toggle */}
+          {isPasswordType && (
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-secondary-400 hover:text-secondary-600 transition-colors duration-200"
+            >
+              {showPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </button>
+          )}
+          
+          {/* Custom Right Icon */}
+          {rightIcon && !isPasswordType && !error && !success && (
+            <div className="text-secondary-400">
+              {rightIcon}
+            </div>
+          )}
+        </div>
       </div>
-      {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
-      )}
-      {helperText && !error && (
-        <p className="mt-1 text-sm text-gray-500">{helperText}</p>
+      
+      {/* Helper Text / Error Message */}
+      {(helperText || error) && (
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={cn(
+            'text-sm',
+            error ? 'text-error-600' : 'text-secondary-500'
+          )}
+        >
+          {error || helperText}
+        </motion.p>
       )}
     </div>
   );

@@ -7,13 +7,14 @@ import {
   Users,
   Leaf,
   Camera,
-  MessageCircle,
-  TrendingUp,
   Award
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import Input from '../components/common/Input';
+import CommunityReviews from '../components/community/CommunityReviews';
+import HeroDynamicBackground from '../components/common/HeroDynamicBackground';
+import AnimatedSectionBackground from '../components/common/AnimatedSectionBackground';
 import { useAuth } from '../contexts/AuthContext';
 
 interface HomePageProps {
@@ -111,10 +112,11 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-teal-600 to-teal-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative bg-gradient-to-br from-teal-600 to-teal-800 text-white overflow-hidden">
+        <HeroDynamicBackground />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               {user ? `Welcome back, ${userProfile?.displayName?.split(' ')[0] || 'Traveler'}!` : 'Travel Safe, Travel Solo'}
@@ -133,9 +135,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                   placeholder="Where would you like to go?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  icon={<Search className="h-5 w-5" />}
                   className="h-14 text-lg bg-white/10 border-white/20 text-white placeholder-white/70 focus:bg-white/20"
-                  fullWidth
                 />
                 <Button
                   className="absolute right-2 top-2 h-10"
@@ -176,10 +176,8 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             return (
               <Card
                 key={action.id}
-                hover
-                clickable
+                className="text-center cursor-pointer transition-transform hover:scale-105"
                 onClick={() => onNavigate(action.route)}
-                className="text-center"
               >
                 <div className={`w-16 h-16 rounded-full ${action.color} flex items-center justify-center mx-auto mb-4`}>
                   <IconComponent className="h-8 w-8" />
@@ -193,7 +191,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Features Section */}
-      <div className="bg-white py-16">
+      <AnimatedSectionBackground variant="gradient" className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -224,59 +222,70 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             })}
           </div>
         </div>
-      </div>
+      </AnimatedSectionBackground>
 
       {/* Trending Destinations */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">Trending Safe Destinations</h2>
-          <Button
-            variant="outline"
-            onClick={() => onNavigate('/explore')}
-            icon={<TrendingUp className="h-4 w-4" />}
-          >
-            View All
-          </Button>
-        </div>
+      <AnimatedSectionBackground variant="light" className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">Trending Safe Destinations</h2>
+            <Button
+              variant="outline"
+              onClick={() => onNavigate('/explore')}
+            >
+              View All
+            </Button>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {trendingDestinations.map((destination, index) => (
-            <Card key={index} hover clickable className="overflow-hidden p-0">
-              <div className="relative h-48">
-                <img
-                  src={destination.image}
-                  alt={destination.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 flex items-center space-x-1">
-                  <Award className="h-3 w-3 text-yellow-500" />
-                  <span className="text-xs font-medium">{destination.safetyRating}</span>
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                  {destination.name}
-                </h3>
-                <p className="text-gray-600 text-sm mb-3">{destination.description}</p>
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center space-x-1">
-                    <Shield className="h-3 w-3 text-green-500" />
-                    <span>Safety: {destination.safetyRating}/5</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Users className="h-3 w-3 text-blue-500" />
-                    <span>Access: {destination.accessibilityScore}/5</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {trendingDestinations.map((destination, index) => (
+              <Card key={index} className="overflow-hidden p-0">
+                <div className="relative h-48">
+                  <img
+                    src={destination.image}
+                    alt={destination.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 flex items-center space-x-1">
+                    <Award className="h-3 w-3 text-yellow-500" />
+                    <span className="text-xs font-medium">{destination.safetyRating}</span>
                   </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                    {destination.name}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-3">{destination.description}</p>
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center space-x-1">
+                      <Shield className="h-3 w-3 text-green-500" />
+                      <span>Safety: {destination.safetyRating}/5</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <Users className="h-3 w-3 text-blue-500" />
+                      <span>Access: {destination.accessibilityScore}/5</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
-      </div>
+      </AnimatedSectionBackground>
+
+      {/* Community Reviews */}
+      <CommunityReviews />
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+      <div className="relative bg-gradient-to-r from-orange-500 to-orange-600 text-white overflow-hidden">
+        {/* Animated background elements for CTA */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600" />
+          <div className="absolute w-64 h-64 bg-white/10 rounded-full blur-3xl -top-32 -left-32 animate-pulse" />
+          <div className="absolute w-96 h-96 bg-white/5 rounded-full blur-3xl -bottom-48 -right-48 animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Start Your Safe Journey?</h2>
           <p className="text-xl mb-8 text-orange-100 max-w-2xl mx-auto">
             Join thousands of women and differently-abled travelers who trust SafeSolo 
@@ -295,9 +304,8 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               size="lg"
               className="border-white text-white hover:bg-white/10"
               onClick={() => onNavigate('/safety')}
-              icon={<MessageCircle className="h-5 w-5" />}
             >
-              Talk to Assistant
+              Safety Center
             </Button>
           </div>
         </div>

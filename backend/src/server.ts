@@ -14,6 +14,7 @@ import experienceRoutes from './routes/experiences.js';
 import safetyRoutes from './routes/safety.js';
 import aiRoutes from './routes/ai.js';
 import paymentRoutes from './routes/payments.js';
+import businessRoutes from './routes/business.js';
 
 // Import middleware
 import { authenticateToken } from './middleware/auth.js';
@@ -93,6 +94,7 @@ app.use('/api/experiences', experienceRoutes);
 app.use('/api/safety', authenticateToken, safetyRoutes);
 app.use('/api/ai', authenticateToken, aiRoutes);
 app.use('/api/payments', authenticateToken, paymentRoutes);
+app.use('/api/business', businessRoutes);
 
 // Socket.IO setup
 setupSocketHandlers(io);

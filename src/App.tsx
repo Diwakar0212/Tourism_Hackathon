@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import { AuthProvider } from './context/AuthContext';
+import { useState } from 'react';
+import { AuthProvider } from './contexts/AuthContext';
+import { SafetyProvider } from './contexts/SafetyContext';
 import Navigation from './components/layout/Navigation';
 import NotificationSystem from './components/notifications/NotificationSystem';
+import PWAInstallPrompt from './components/common/PWAInstallPrompt';
+import DevelopmentNotice from './components/common/DevelopmentNotice';
 import HomePage from './pages/HomePage';
 import SafetyPage from './pages/SafetyPage';
 import ExplorePage from './pages/ExplorePage';
+import SearchBookingPage from './pages/SearchBookingPage';
 import PlanTripPage from './pages/PlanTripPage';
 import TripsPage from './pages/TripsPage';
 import ExperiencesPage from './pages/ExperiencesPage';
 import ProfilePage from './pages/ProfilePage';
 import AuthPage from './pages/AuthPage';
+import AIPage from './pages/AIPage';
 
 function App() {
   const [activeRoute, setActiveRoute] = useState('/');
@@ -26,6 +31,8 @@ function App() {
         return <SafetyPage />;
       case '/explore':
         return <ExplorePage />;
+      case '/search':
+        return <SearchBookingPage />;
       case '/trips':
         return <TripsPage />;
       case '/plan-trip':
@@ -34,6 +41,8 @@ function App() {
         return <ExperiencesPage />;
       case '/profile':
         return <ProfilePage />;
+      case '/ai':
+        return <AIPage />;
       case '/auth':
         return <AuthPage />;
       default:
@@ -43,13 +52,17 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-gray-50">
-        <Navigation activeRoute={activeRoute} onNavigate={handleNavigation} />
-        <main>
-          {renderCurrentPage()}
-        </main>
-        <NotificationSystem />
-      </div>
+      <SafetyProvider>
+        <div className="min-h-screen bg-gray-50">
+          <Navigation activeRoute={activeRoute} onNavigate={handleNavigation} />
+          <main className="pt-14 md:pt-16">
+            {renderCurrentPage()}
+          </main>
+          <NotificationSystem />
+          <PWAInstallPrompt />
+          <DevelopmentNotice />
+        </div>
+      </SafetyProvider>
     </AuthProvider>
   );
 }

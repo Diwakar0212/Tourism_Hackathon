@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { 
   Search, 
-  MapPin, 
   Calendar, 
   Shield, 
   Compass, 
-  Heart,
   Users,
   Leaf,
   Camera,
@@ -16,6 +14,7 @@ import {
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import Input from '../components/common/Input';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HomePageProps {
   onNavigate: (route: string) => void;
@@ -23,8 +22,17 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { user, userProfile } = useAuth();
 
   const quickActions = [
+    {
+      id: 'search-booking',
+      title: 'Search & Book',
+      description: 'Flights, hotels & transport',
+      icon: Search,
+      color: 'bg-indigo-50 text-indigo-600',
+      route: '/search-booking',
+    },
     {
       id: 'plan-trip',
       title: 'Plan New Trip',
@@ -48,14 +56,6 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       icon: Compass,
       color: 'bg-blue-50 text-blue-600',
       route: '/explore',
-    },
-    {
-      id: 'experiences',
-      title: 'Local Experiences',
-      description: 'Book unique activities',
-      icon: Heart,
-      color: 'bg-orange-50 text-orange-600',
-      route: '/experiences',
     },
   ];
 
@@ -117,12 +117,13 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Travel <span className="text-orange-300">Safe</span>, 
-              Travel <span className="text-orange-300">Solo</span>
+              {user ? `Welcome back, ${userProfile?.displayName?.split(' ')[0] || 'Traveler'}!` : 'Travel Safe, Travel Solo'}
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-teal-100 max-w-3xl mx-auto">
-              Empowering women and differently-abled travelers with AI-powered planning, 
-              safety features, and accessible adventures worldwide.
+              {user 
+                ? 'Ready for your next adventure? Let\'s plan something amazing together.'
+                : 'Empowering women and differently-abled travelers with AI-powered planning, safety features, and accessible adventures worldwide.'
+              }
             </p>
             
             {/* Search Bar */}
@@ -138,7 +139,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 />
                 <Button
                   className="absolute right-2 top-2 h-10"
-                  onClick={() => onNavigate('/explore')}
+                  onClick={() => onNavigate('/search-booking')}
                 >
                   Search
                 </Button>

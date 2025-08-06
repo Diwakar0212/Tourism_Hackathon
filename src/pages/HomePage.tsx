@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
-import Input from '../components/common/Input';
+import SearchInput from '../components/common/SearchInput';
 import CommunityReviews from '../components/community/CommunityReviews';
 import HeroDynamicBackground from '../components/common/HeroDynamicBackground';
 import AnimatedSectionBackground from '../components/common/AnimatedSectionBackground';
@@ -131,11 +131,20 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mb-8">
               <div className="relative">
-                <Input
+                <SearchInput
                   placeholder="Where would you like to go?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-14 text-lg bg-white/10 border-white/20 text-white placeholder-white/70 focus:bg-white/20"
+                  onSearch={(query) => {
+                    console.log('Search query:', query);
+                    onNavigate('/search-booking');
+                  }}
+                  onSuggestionSelect={(suggestion) => {
+                    setSearchQuery(suggestion);
+                    onNavigate('/search-booking');
+                  }}
+                  showSuggestionsOnFocus={true}
                 />
                 <Button
                   className="absolute right-2 top-2 h-10"

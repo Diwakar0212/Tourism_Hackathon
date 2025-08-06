@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
-import Input from '../components/common/Input';
+import SearchInput from '../components/common/SearchInput';
 import AccessibilityIndicator from '../components/accessibility/AccessibilityIndicator';
 import { LocalExperience } from '../types';
 
@@ -231,15 +231,25 @@ const ExperiencesPage: React.FC = () => {
         <div className="mb-8 space-y-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <Input
+              <SearchInput
                 placeholder="Search experiences, locations, or activities..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                icon={<Search className="h-5 w-5" />}
-                fullWidth
+                onSearch={(query) => {
+                  console.log('Searching experiences:', query);
+                }}
+                suggestions={[
+                  { id: '1', text: 'cooking classes', type: 'popular', category: 'Food' },
+                  { id: '2', text: 'art workshops', type: 'popular', category: 'Culture' },
+                  { id: '3', text: 'photography tours', type: 'trending', category: 'Adventure' },
+                  { id: '4', text: 'yoga sessions', type: 'popular', category: 'Wellness' },
+                  { id: '5', text: 'heritage walks', type: 'trending', category: 'Culture' },
+                  { id: '6', text: 'music lessons', type: 'popular', category: 'Arts' }
+                ]}
               />
             </div>
-            <Button variant="outline" icon={<Filter className="h-4 w-4" />}>
+            <Button variant="outline">
+              <Filter className="h-4 w-4 mr-2" />
               More Filters
             </Button>
           </div>
@@ -297,7 +307,7 @@ const ExperiencesPage: React.FC = () => {
         {filteredExperiences.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredExperiences.map(experience => (
-              <Card key={experience.id} hover clickable className="overflow-hidden p-0">
+              <Card key={experience.id} className="overflow-hidden p-0 hover:shadow-lg transition-shadow cursor-pointer">
                 <div className="relative">
                   <img
                     src={experience.images[0]}

@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
-import Input from '../components/common/Input';
+import SearchInput from '../components/common/SearchInput';
 import TripCard from '../components/trips/TripCard';
 import { Trip } from '../types';
 
@@ -175,9 +175,9 @@ const TripsPage: React.FC = () => {
           <Button
             variant="primary"
             size="lg"
-            icon={<Plus className="h-5 w-5" />}
             className="mt-4 md:mt-0"
           >
+            <Plus className="h-5 w-5 mr-2" />
             Plan New Trip
           </Button>
         </div>
@@ -224,15 +224,24 @@ const TripsPage: React.FC = () => {
         {/* Search and Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="flex-1">
-            <Input
+            <SearchInput
               placeholder="Search trips by destination or title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              icon={<Search className="h-5 w-5" />}
-              fullWidth
+              onSearch={(query) => {
+                console.log('Searching trips:', query);
+              }}
+              suggestions={[
+                { id: '1', text: 'Goa trip', type: 'recent', category: 'Recent' },
+                { id: '2', text: 'Kerala backwaters', type: 'popular', category: 'Popular' },
+                { id: '3', text: 'Himachal adventure', type: 'trending', category: 'Adventure' },
+                { id: '4', text: 'Rajasthan heritage', type: 'popular', category: 'Culture' },
+                { id: '5', text: 'solo travel India', type: 'trending', category: 'Solo Travel' }
+              ]}
             />
           </div>
-          <Button variant="outline" icon={<Filter className="h-4 w-4" />}>
+          <Button variant="outline">
+            <Filter className="h-4 w-4 mr-2" />
             Filters
           </Button>
         </div>
@@ -300,7 +309,8 @@ const TripsPage: React.FC = () => {
                 <p className="text-gray-600 mb-4">
                   Start planning your first safe and accessible adventure
                 </p>
-                <Button variant="primary" icon={<Plus className="h-4 w-4" />}>
+                <Button variant="primary">
+                  <Plus className="h-4 w-4 mr-2" />
                   Plan Your First Trip
                 </Button>
               </>
@@ -329,13 +339,16 @@ const TripsPage: React.FC = () => {
           <div className="mt-12 bg-gradient-to-r from-teal-50 to-blue-50 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="outline" fullWidth icon={<Plus className="h-4 w-4" />}>
+              <Button variant="outline" className="w-full">
+                <Plus className="h-4 w-4 mr-2" />
                 Plan New Trip
               </Button>
-              <Button variant="outline" fullWidth icon={<Calendar className="h-4 w-4" />}>
+              <Button variant="outline" className="w-full">
+                <Calendar className="h-4 w-4 mr-2" />
                 View Calendar
               </Button>
-              <Button variant="outline" fullWidth icon={<Users className="h-4 w-4" />}>
+              <Button variant="outline" className="w-full">
+                <Users className="h-4 w-4 mr-2" />
                 Invite Friends
               </Button>
             </div>
